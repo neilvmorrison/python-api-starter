@@ -26,7 +26,7 @@ app = FastAPI(lifespan=lifespan)
 
 @app.get("/")
 async def root():
-    return {"message": os.getenv("OTHER_ENV_VARIABLE")}
+    return {"message": "ok"}
 
 
 def main():
