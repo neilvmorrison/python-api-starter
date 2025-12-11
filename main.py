@@ -1,12 +1,24 @@
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
 import os
 from dotenv import load_dotenv
+import uvicorn
 
 load_dotenv()
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+  try:
+      print("Lifespan startup")
+  except Exception as e:
+    print(f"Error in lifespan: {e}")
+    raise e
+  yield
+  print("Lifespan shutdown")
+
 PORT = os.getenv("PORT", 4000)
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/")
@@ -15,7 +27,6 @@ async def root():
 
 
 def main():
-    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=PORT)
 
 
